@@ -14,4 +14,5 @@ public interface UserService {
 
     Optional<User> getUserByLogin(String login);
 
+    User create(User user);
 }

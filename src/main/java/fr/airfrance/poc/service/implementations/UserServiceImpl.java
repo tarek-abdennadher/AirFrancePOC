@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>This method fetch all database users</p>
+     *
      * @return
      */
     @Override
@@ -29,8 +30,9 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     *     This method fetch all database users by pages
+     * This method fetch all database users by pages
      * </p>
+     *
      * @param pageable
      * @return
      */
@@ -41,13 +43,27 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     *     This method fetch user by login
+     * This method fetch user by login
      * </p>
+     *
      * @param login
      * @return
      */
     @Override
     public Optional<User> getUserByLogin(String login) {
         return userRepository.findByLogin(login);
+    }
+
+    /**
+     * <p>
+     * This method create valid user (valid user respect all validation requirements
+     * </p>
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public User create(User user) {
+        return userRepository.save(user);
     }
 }

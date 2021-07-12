@@ -1,0 +1,10 @@
+fr.airfrance.poc
+fr.airfrance.poc.config
+fr.airfrance.poc.controller
+fr.airfrance.poc.dto
+fr.airfrance.poc.entity
+fr.airfrance.poc.entity.validation
+fr.airfrance.poc.mapper
+fr.airfrance.poc.repository
+fr.airfrance.poc.service.implementations
+fr.airfrance.poc.service.interfaces

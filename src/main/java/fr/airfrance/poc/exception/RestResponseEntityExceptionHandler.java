@@ -205,6 +205,20 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return buildResponseEntity(apiError);
     }
 
+    /**
+     * Handles ResourceNotFoundException. Created to encapsulate errors with more
+     * detail than javax.persistence.EntityNotFoundException.
+     *
+     * @param ex the ResourceNotFoundException
+     * @return the ApiError object
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(ResourceNotFoundException ex) {
+        ApiError apiError = new ApiError(NOT_FOUND);
+        apiError.setMessage("requested resource doesn't exist");
+        return buildResponseEntity(apiError);
+    }
+
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }

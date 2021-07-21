@@ -14,5 +14,7 @@ public interface UserService {
 
     List<User> getAllByUserName(String login);
 
+    User getUserById(String userName, String birthdate, String country);
+
     User create(User user);
 }

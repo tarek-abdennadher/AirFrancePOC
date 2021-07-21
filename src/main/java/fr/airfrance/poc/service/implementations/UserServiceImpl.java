@@ -1,6 +1,8 @@
 package fr.airfrance.poc.service.implementations;
 
 import fr.airfrance.poc.entity.User;
+import fr.airfrance.poc.entity.UserPk;
+import fr.airfrance.poc.exception.ResourceNotFoundException;
 import fr.airfrance.poc.repository.UserRepository;
 import fr.airfrance.poc.service.interfaces.UserService;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +57,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllByUserName(String userName) {
         return userRepository.findByUserPkUserName(userName);
+    }
+
+    /**
+     * <p>
+     *     This method allow to get user by embeddedId (userName, birthdate, country)
+     * </p>
+     * @param userName
+     * @param birthdate
+     * @param country
+     * @return
+     */
+    @Override
+    public User getUserById(String userName, String birthdate, String country) {
+        UserPk userPk = new UserPk(userName, birthdate, country);
+        return userRepository.findById(userPk).orElseThrow(ResourceNotFoundException::new);
     }
 
     /**

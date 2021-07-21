@@ -77,9 +77,21 @@ public class UserController {
      * @param userName
      * @return
      */
-    @GetMapping("/{userName}")
+    @GetMapping("/all/{userName}")
     public List<UserDto> getAllByUserName(@PathVariable("userName") String userName) {
         return userMapper.toDtoList(userService.getAllByUserName(userName));
+    }
+
+    /**
+     * <p>
+     *     This method allow to fetch user by userName, birthdate and country as optional (country default value is FRANCE)
+     * </p>
+     */
+    @GetMapping("/{userName}")
+    public UserDto getUserById(@PathVariable("userName") String userName,
+                               @RequestParam(required = true) String birthdate,
+                               @RequestParam(defaultValue = "FRANCE") String country) {
+        return userMapper.toDto(userService.getUserById(userName, birthdate, country));
     }
 
     /**

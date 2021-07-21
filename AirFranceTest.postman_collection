@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "3906eed3-32f3-460e-a266-599ae6cbfbcc",
+		"name": "airFrancePoc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user abdennadher",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"abdennadher\",\r\n    \"birthdate\": \"16/05/1991\",\r\n    \"country\": \"FRANCE\",\r\n    \"phoneNumber\": \"0676337561\",\r\n    \"gender\": \"M\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9090/user/",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user smaali",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"smaali\",\r\n    \"birthdate\": \"03/08/1991\",\r\n    \"country\": \"FRANCE\",\r\n    \"phoneNumber\": \"0676337561\",\r\n    \"gender\": \"MME\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9090/user/",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all users by userName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9090/user/all/smaali",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"user",
+						"all",
+						"smaali"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9090/user/smaali?birthdate=03/08/1991",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"user",
+						"smaali"
+					],
+					"query": [
+						{
+							"key": "birthdate",
+							"value": "03/08/1991"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * <p>
- *     This class is used as embeddable id to define User by
+ *     This class is used as embeddable id to define User by {userName, birthdate, country}
  * </p>
  * @author TarekAbdennadher
  */

@@ -72,14 +72,14 @@ public class UserController {
 
     /**
      * <p>
-     *     This method allow to get user by login and throw exception if user doesn't exist
+     *     This method allow to get all users by userName
      * </p>
-     * @param login
+     * @param userName
      * @return
      */
-    @GetMapping("/{login}")
-    public List<UserDto> getAllByUserName(@PathVariable("login") String login) {
-        return userMapper.toDtoList(userService.getAllByUserName(login));
+    @GetMapping("/{userName}")
+    public List<UserDto> getAllByUserName(@PathVariable("userName") String userName) {
+        return userMapper.toDtoList(userService.getAllByUserName(userName));
     }
 
     /**

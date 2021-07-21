@@ -114,12 +114,7 @@ public class UserController {
             return new ResponseEntity("user validations failed: \n" + bindingResult.getAllErrors().stream()
                     .map(e -> " -"+e.getDefaultMessage()).collect(Collectors.joining("\n")), HttpStatus.EXPECTATION_FAILED);
         }
-        try {
-            user =userService.create(user);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
-        }
 
-        return new ResponseEntity(userMapper.toDto(user), HttpStatus.OK);
+        return new ResponseEntity(userMapper.toDto(userService.create(user)), HttpStatus.OK);
     }
 }

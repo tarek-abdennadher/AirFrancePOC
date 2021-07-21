@@ -8,7 +8,12 @@ import fr.airfrance.poc.service.interfaces.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -19,6 +24,9 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static Pattern FRANCE_DATE_PATTERN = Pattern.compile("^\\d{2}/\\d{2}/\\d{4}$");
+    private static final String DATE_FORAMT = "dd/MM/yyyy";
 
     private UserRepository userRepository;
 
@@ -63,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     *     This method allow to get user by embeddedId (userName, birthdate, country)
+     *     This method allow to get user by embeddedId attribute(userName, birthdate, country)
      * </p>
      * @param userName
      * @param birthdate
@@ -78,6 +86,18 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
+     *     This method allow to get user by embeddedId UserPk
+     * </p>
+     * @param userPk
+     * @return
+     */
+    @Override
+    public Optional<User> getUserByPk(UserPk userPk) {
+        return userRepository.findById(userPk);
+    }
+
+    /**
+     * <p>
      * This method create valid user (valid user respect all validation requirements
      * </p>
      *
@@ -87,5 +107,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         return userRepository.save(user);
+    }
+
+    /**
+     * <p>
+     *     This method check if birthdate match 'dd/MM/yyyy' format
+     * </p>
+     * @param user
+     * @return
+     */
+    @Override
+    public Boolean isDatePatternValid(User user) {
+        return FRANCE_DATE_PATTERN.matcher(user.getUserPk().getBirthdate()).matches();
+    }
+
+    /**
+     * <p>
+     *     This method calculate age from user birthDate
+     * </p>
+     * @param user
+     * @return
+     */
+    @Override
+    public int getAge(User user) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORAMT);
+        LocalDate birthday= LocalDate.parse(user.getUserPk().getBirthdate(), formatter);
+        LocalDate today = LocalDate.now();
+        return Period.between(birthday, today).getYears();
     }
 }

@@ -28,12 +28,11 @@ public class UserValidator implements Validator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserValidator.class);
     private static final int MIN_AGE = 18;
-    private static Pattern FRANCE_DATE_PATTERN = Pattern.compile("^\\d{2}/\\d{2}/\\d{4}$");
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public UserValidator(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserValidator(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -77,7 +76,7 @@ public class UserValidator implements Validator {
      * @param errors
      */
     private void uniqueUserValidation(User user, Errors errors) {
-        Optional<User> fetchedUser = userRepository.findById(user.getUserPk());
+        Optional<User> fetchedUser = userService.getUserByPk(user.getUserPk());
         if (fetchedUser.isPresent())
             errors.reject("unique user error", "This user exist");
     }
@@ -106,21 +105,16 @@ public class UserValidator implements Validator {
      * @param errors
      */
     private void validateBirthday(User user, Errors errors) {
-        if (!FRANCE_DATE_PATTERN.matcher(user.getUserPk().getBirthdate()).matches()) {
+        if (!userService.isDatePatternValid(user)) {
             errors.reject("date format error", "date must be in dd/MM/yyyy format");
         }
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate birthday= LocalDate.parse(user.getUserPk().getBirthdate(), formatter);
-            LocalDate today = LocalDate.now();
-            int age = Period.between(birthday, today).getYears();
-            if (age < MIN_AGE) {
+            if (userService.getAge(user) < MIN_AGE) {
                 errors.reject("age error", "you have to be older than 18");
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
-
     }
 
     /**

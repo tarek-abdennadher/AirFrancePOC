@@ -1,6 +1,7 @@
 package fr.airfrance.poc.service.interfaces;
 
 import fr.airfrance.poc.entity.User;
+import fr.airfrance.poc.entity.UserPk;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -23,5 +24,11 @@ public interface UserService {
 
     User getUserById(String userName, String birthdate, String country);
 
+    Optional<User> getUserByPk(UserPk userPk);
+
     User create(User user);
+
+    Boolean isDatePatternValid(User user);
+
+    int getAge(User user);
 }

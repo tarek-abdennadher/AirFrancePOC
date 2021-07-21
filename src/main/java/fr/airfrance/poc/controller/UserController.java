@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  * <p>
  *     This Rest API expose services to register a user and displays their details
  * </p>
+ *
  * @author TarekAbdennadher
  */
 @RestController

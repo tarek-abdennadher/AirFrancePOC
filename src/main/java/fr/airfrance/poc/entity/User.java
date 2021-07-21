@@ -11,6 +11,7 @@ import java.io.Serializable;
  * <p>
  *     This class represents a user
  * </p>
+ *
  * @author TarekAbdennadher
  */
 

@@ -2,6 +2,13 @@ package fr.airfrance.poc.dto;
 
 import fr.airfrance.poc.entity.enumeration.Gender;
 
+/**
+ * <p>
+ *     This dto flat User embedded id
+ * </p>
+ *
+ * @author TarekAbdennadher
+ */
 public class UserDto {
 
     private String userName;

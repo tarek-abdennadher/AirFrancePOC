@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * <p>
+ *     This aspect log input arguments, output and execution time for rest controller layer
+ * </p>
+ */
 @Aspect
 @Component
 public class LoggingAspect {

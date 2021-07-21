@@ -12,8 +12,10 @@ import java.util.List;
 
 /**
  * <p>
- *     This is the service layer to manage User entity
+ *     This is the userService implementation to manage User entity
  * </p>
+ *
+ * @author TarekAbdennadher
  */
 @Service
 public class UserServiceImpl implements UserService {

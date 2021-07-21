@@ -1,5 +1,12 @@
 package fr.airfrance.poc.exception;
 
+/**
+ * <p>
+ *     This is a custom exception for resource not found
+ * </p>
+ *
+ * @author TarekAbdennadher
+ */
 public class ResourceNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = -8878526610645207217L;

@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
  * <p>
  *     This component check user validation criteria
  * </p>
+ *
+ * @author TarekAbdennadher
  */
 @Component
 public class UserValidator implements Validator {

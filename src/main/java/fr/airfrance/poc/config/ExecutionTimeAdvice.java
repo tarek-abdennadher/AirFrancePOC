@@ -20,6 +20,14 @@ public class ExecutionTimeAdvice {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionTimeAdvice.class);
 
+    /**
+     * <p>
+     *     This method log inputs arguments, outputs and execution time
+     * </p>
+     * @param point
+     * @return
+     * @throws Throwable
+     */
     @Around("@annotation(fr.airfrance.poc.config.TrackExecutionTime)")
     public Object executionTime(ProceedingJoinPoint point) throws Throwable {
         long startTime = System.currentTimeMillis();

@@ -7,8 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * <p>
+ *     This is the service layer to manage User entity
+ * </p>
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -43,15 +47,14 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     * This method fetch user by login
+     *     This method fetch all users with a given userName
      * </p>
-     *
-     * @param login
+     * @param userName
      * @return
      */
     @Override
-    public List<User> getAllByUserName(String login) {
-        return userRepository.findByUserPkUserName(login);
+    public List<User> getAllByUserName(String userName) {
+        return userRepository.findByUserPkUserName(userName);
     }
 
     /**

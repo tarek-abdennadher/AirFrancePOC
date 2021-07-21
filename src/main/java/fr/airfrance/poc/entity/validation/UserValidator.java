@@ -1,7 +1,9 @@
 package fr.airfrance.poc.entity.validation;
 
 import fr.airfrance.poc.entity.User;
+import fr.airfrance.poc.repository.UserRepository;
 import fr.airfrance.poc.service.interfaces.UserService;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,8 +13,14 @@ import org.springframework.validation.Validator;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * <p>
+ *     This component check user validation criteria
+ * </p>
+ */
 @Component
 public class UserValidator implements Validator {
 
@@ -20,12 +28,19 @@ public class UserValidator implements Validator {
     private static final int MIN_AGE = 18;
     private static Pattern FRANCE_DATE_PATTERN = Pattern.compile("^\\d{2}/\\d{2}/\\d{4}$");
 
-    private UserService userService;
+    private UserRepository userRepository;
 
-    public UserValidator(UserService userService) {
-        this.userService = userService;
+    public UserValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
+    /**
+     * <p>
+     *     User class supports check
+     * </p>
+     * @param aClass
+     * @return
+     */
     @Override
     public boolean supports(Class<?> aClass) {
         return aClass.equals(User.class);
@@ -43,9 +58,42 @@ public class UserValidator implements Validator {
         LOGGER.debug("User validation {}", entity);
         if (entity instanceof User) {
             User user = (User) entity;
-            validateBirthday(user, errors);
-            validateCountry(user, errors);
+            requiredAttributeValidation(user, errors);
+            if (!errors.hasErrors()) {
+                uniqueUserValidation(user, errors);
+                validateBirthday(user, errors);
+                validateCountry(user, errors);
+            }
         }
+    }
+
+    /**
+     * <p>
+     *     permit only new users
+     * </p>
+     * @param user
+     * @param errors
+     */
+    private void uniqueUserValidation(User user, Errors errors) {
+        Optional<User> fetchedUser = userRepository.findById(user.getUserPk());
+        if (fetchedUser.isPresent())
+            errors.reject("unique user error", "This user exist");
+    }
+
+    /**
+     * <p>
+     *     validate only user with required field
+     * </p>
+     * @param user
+     * @param errors
+     */
+    private void requiredAttributeValidation(User user, Errors errors) {
+        if (user.getUserPk().getUserName() == null)
+            errors.reject("user definition error", "userName is required");
+        if (user.getUserPk().getBirthdate() == null)
+            errors.reject("user definition error", "birthdate is required");
+        if (user.getUserPk().getCountry() == null)
+            errors.reject("user definition error", "country of residence is required");
     }
 
     /**

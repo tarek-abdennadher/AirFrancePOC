@@ -12,7 +12,7 @@ public interface UserService {
 
     List<User> getAll(Pageable pageable);
 
-    Optional<User> getUserByLogin(String login);
+    List<User> getAllByUserName(String login);
 
     User create(User user);
 }

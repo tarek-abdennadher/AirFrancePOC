@@ -12,25 +12,4 @@ public class UserTest extends PocApplicationTests {
 
     @Autowired
     UserRepository userRepository;
-
-    private User firstUser;
-
-    @Before
-    public void setUp() {
-        if (userRepository.findAll().size() > 0)
-            userRepository.deleteAll();
-        firstUser = new User("user1","admin","first", "user","16/05/1991","France");
-    }
-
-    @Test
-    public void saveUserTestCase() {
-        firstUser = userRepository.save(firstUser);
-        assertThat(firstUser.getId()).isNotNull();
-    }
-
-    @Test
-    public void findByLoginTestCase() {
-        firstUser = userRepository.save(firstUser);
-        assertThat(userRepository.findByLogin("admin").equals(firstUser.getLogin()));
-    }
 }

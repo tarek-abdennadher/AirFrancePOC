@@ -1,87 +1,37 @@
 package fr.airfrance.poc.dto;
 
+import fr.airfrance.poc.entity.UserPk;
+import fr.airfrance.poc.entity.enumeration.Gender;
+
 public class UserDto {
 
-    private String id;
+    private UserPk userPk;
 
-    private String login;
+    private String phoneNumber;
 
-    private String password;
+    private Gender gender;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String birthday;
-
-    private String country;
-
-    public String getId() {
-        return id;
+    public UserPk getUserPk() {
+        return userPk;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserPk(UserPk userPk) {
+        this.userPk = userPk;
     }
 
-    public String getLogin() {
-        return login;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getPassword() {
-        return password;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "id='" + id + '\'' +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", country='" + country + '\'' +
-                '}';
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

@@ -43,24 +43,8 @@ public class UserValidator implements Validator {
         LOGGER.debug("User validation {}", entity);
         if (entity instanceof User) {
             User user = (User) entity;
-            validateLogin(user, errors);
             validateBirthday(user, errors);
             validateCountry(user, errors);
-        }
-    }
-
-    /**
-     * <p>
-     *     login validation: prohibit duplicated login
-     * </p>
-     * @param user
-     * @param errors
-     */
-    private void validateLogin(User user, Errors errors) {
-        for (User u : userService.getAll()) {
-            if(u.getLogin().equalsIgnoreCase(user.getLogin())){
-                errors.reject("login exist", "User with this login already exists");
-            }
         }
     }
 
@@ -72,12 +56,12 @@ public class UserValidator implements Validator {
      * @param errors
      */
     private void validateBirthday(User user, Errors errors) {
-        if (!FRANCE_DATE_PATTERN.matcher(user.getBirthday()).matches()) {
+        if (!FRANCE_DATE_PATTERN.matcher(user.getUserPk().getBirthdate()).matches()) {
             errors.reject("date format error", "date must be in dd/MM/yyyy format");
         }
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate birthday= LocalDate.parse(user.getBirthday(), formatter);
+            LocalDate birthday= LocalDate.parse(user.getUserPk().getBirthdate(), formatter);
             LocalDate today = LocalDate.now();
             int age = Period.between(birthday, today).getYears();
             if (age < MIN_AGE) {
@@ -97,7 +81,7 @@ public class UserValidator implements Validator {
      * @param errors
      */
     private void validateCountry(User user, Errors errors) {
-        if(!(user.getCountry().equalsIgnoreCase("France"))){
+        if(!(user.getUserPk().getCountry().equalsIgnoreCase("France"))){
             errors.reject("not supported country", "you must be in France");
         }
     }

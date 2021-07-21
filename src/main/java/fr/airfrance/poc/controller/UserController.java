@@ -26,6 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>
+ *     This Rest API expose services to register a user and displays their details
+ * </p>
+ * @author TarekAbdennadher
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -72,8 +78,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/{login}")
-    public UserDto getUserByLogin(@PathVariable("login") String login) {
-        return userService.getUserByLogin(login).map(userMapper::toDto).orElseThrow(ClassCastException::new);
+    public List<UserDto> getAllByUserName(@PathVariable("login") String login) {
+        return userMapper.toDtoList(userService.getAllByUserName(login));
     }
 
     /**

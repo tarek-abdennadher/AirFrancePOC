@@ -25,7 +25,7 @@ This project is running with an in-memory database H2. It is configured as a fil
 
 To open its' browser based console application you have to open it on http://localhost:9090/h2-console/login.
 
-The settings shown below are needed to be configured :
+The settings shown below are needed to be configured on client side :
 
 <b>Driver Class:</b> org.h2.Driver
 

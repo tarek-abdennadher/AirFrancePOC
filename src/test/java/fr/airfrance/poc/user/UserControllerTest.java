@@ -32,6 +32,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * <p>
+ *     This class tests main user controller
+ * </p>
+ */
 public class UserControllerTest extends PocApplicationTests {
 
     @Mock
@@ -56,7 +61,11 @@ public class UserControllerTest extends PocApplicationTests {
     List<UserDto> usersDto;
     List<UserDto> singlePageOfTenDto;
 
-
+    /**
+     * <p>
+     *     Set up initial values before every test execution
+     * </p>
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -82,6 +91,12 @@ public class UserControllerTest extends PocApplicationTests {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
+    /**
+     * <p>
+     *     This method tests getAllUser when no request param is present
+     * </p>
+     * @throws Exception
+     */
     @Test
     public void getAllUserWithoutRequestParamShouldReturnAllUsers() throws Exception {
         when(userService.getAll()).thenReturn(users);
@@ -92,6 +107,12 @@ public class UserControllerTest extends PocApplicationTests {
                 .andReturn();
     }
 
+    /**
+     * <p>
+     *     This method tests getAllUser when paging request param is set to true
+     * </p>
+     * @throws Exception
+     */
     @Test
     public void getAllUserWithRequestParamShouldReturnSinglePage() throws Exception {
         when(userService.getAll(any())).thenReturn(singlePageOfTen);
@@ -102,6 +123,12 @@ public class UserControllerTest extends PocApplicationTests {
                 .andReturn();
     }
 
+    /**
+     * <p>
+     *     This method tests getUserById and expect BadRequestException when birthdate param is not present
+     * </p>
+     * @throws Exception
+     */
     @Test
     public void getUserByIdTestCase() throws Exception {
         when(userService.getUserById(any(), any(), any())).thenReturn(user);
@@ -116,10 +143,16 @@ public class UserControllerTest extends PocApplicationTests {
         MvcResult mvcResultException = mockMvc.perform(get("/user/abdennadher"))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertThat(result.getResolvedException().getMessage())
-                        .isEqualTo("Required request parameter 'birthdate' for method parameter type String is not present"))
+                .isEqualTo("Required request parameter 'birthdate' for method parameter type String is not present"))
                 .andReturn();
     }
 
+    /**
+     * <p>
+     *     This method tests user creation when it should pass
+     * </p>
+     * @throws Exception
+     */
     @Test
     public void createUserShouldPass() throws Exception {
         when(userService.create(user)).thenReturn(user);
@@ -134,6 +167,12 @@ public class UserControllerTest extends PocApplicationTests {
                 .andReturn();
     }
 
+    /**
+     * <p>
+     *     This method tests user creation when validation should fail and return status = 417
+     * </p>
+     * @throws Exception
+     */
     @Test
     public void createUserShouldFailWhenValidatorFail() throws Exception {
         when(userService.create(invalidUser)).thenReturn(invalidUser);

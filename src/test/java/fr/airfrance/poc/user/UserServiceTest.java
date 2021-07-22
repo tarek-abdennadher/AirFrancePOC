@@ -22,6 +22,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+/**
+ * <p>
+ *     This class test main userService methods
+ * </p>
+ */
 public class UserServiceTest extends PocApplicationTests {
 
     @Mock
@@ -34,6 +39,11 @@ public class UserServiceTest extends PocApplicationTests {
     User secondUser = new User();
     User invalidUser = new User();
 
+    /**
+     * <p>
+     *     Set up initial values before every test execution
+     * </p>
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -52,19 +62,33 @@ public class UserServiceTest extends PocApplicationTests {
 
     }
 
+    /**
+     * <p>
+     *     This method allow to test getAll method
+     * </p>
+     */
     @Test
     public void getAllUserTestCase() {
         when(userRepository.findAll()).thenReturn(Arrays.asList(firstUser, secondUser));
         assertThat(userService.getAll().size()).isEqualTo(2);
     }
 
+    /**
+     * <p>
+     *     This method allow to test getAllByUserName method
+     * </p>
+     */
     @Test
     public void getAllByUserNameTestCase() {
         when(userRepository.findByUserPkUserName(any())).thenReturn(Arrays.asList(firstUser, secondUser));
         assertThat(userService.getAllByUserName("abdennadher").size()).isEqualTo(2);
     }
 
-
+    /**
+     * <p>
+     *     This method allow to test getUserById if exist and throw ResourceNotFound exception if it doesn't
+     * </p>
+     */
     @Test
     public void getUserByTestCase() {
         // user exist
@@ -76,12 +100,22 @@ public class UserServiceTest extends PocApplicationTests {
         Assert.assertThrows(ResourceNotFoundException.class, ()-> userService.getUserById("jack","16/05/1991", "FRANCE"));
     }
 
+    /**
+     * <p>
+     *     This method allow to test createUser method
+     * </p>
+     */
     @Test
     public void createUserTestCase() {
         when(userRepository.save(firstUser)).thenReturn(firstUser);
         assertThat(userService.create(firstUser)).isNotNull();
     }
 
+    /**
+     * <p>
+     *     This method allow to test birthdate format validation
+     * </p>
+     */
     @Test
     public void datePatternValidationTestCase() {
         // valid pattern
@@ -91,6 +125,11 @@ public class UserServiceTest extends PocApplicationTests {
         assertThat(userService.isDatePatternValid(invalidUser)).isFalse();
     }
 
+    /**
+     * <p>
+     *     This method allow to test age calculation method
+     * </p>
+     */
     @Test
     public void calculateAge() {
         // The age must be 30 at 2021 and more from 2022 and above

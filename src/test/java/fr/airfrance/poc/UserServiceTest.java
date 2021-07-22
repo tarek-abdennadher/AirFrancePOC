@@ -49,12 +49,6 @@ public class UserServiceTest extends PocApplicationTests {
         UserPk invalidUserPk = new UserPk("abdennadher", "13-08-1996", "FRANCE");
         invalidUser.setUserPk(invalidUserPk);
 
-        UserDto userDto = new UserDto();
-        userDto.setUserName("abdennadher");
-        userDto.setBirthdate("16/05/1991");
-        userDto.setCountry("FRANCE");
-        userDto.setPhoneNumber("0676337561");
-        userDto.setGender(Gender.M);
     }
 
     @Test

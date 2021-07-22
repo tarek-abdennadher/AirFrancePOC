@@ -1,106 +1,152 @@
 package fr.airfrance.poc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.airfrance.poc.controller.UserController;
 import fr.airfrance.poc.dto.UserDto;
 import fr.airfrance.poc.entity.User;
 import fr.airfrance.poc.entity.UserPk;
 import fr.airfrance.poc.entity.enumeration.Gender;
-import fr.airfrance.poc.exception.ResourceNotFoundException;
-import fr.airfrance.poc.repository.UserRepository;
-import fr.airfrance.poc.service.implementations.UserServiceImpl;
-import org.junit.Assert;
+import fr.airfrance.poc.entity.validation.UserValidator;
+import fr.airfrance.poc.mapper.UserMapper;
+import fr.airfrance.poc.service.interfaces.UserService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserServiceTest extends PocApplicationTests {
+public class UserControllerTest extends PocApplicationTests {
 
     @Mock
-    UserRepository userRepository;
+    UserService userService;
 
-    @InjectMocks
-    private UserServiceImpl userService =new UserServiceImpl(userRepository);
+    @Autowired
+    UserMapper userMapper;
 
-    User firstUser = new User();
-    User secondUser = new User();
+    UserValidator userValidator = new UserValidator(userService);
+
+    private UserController userController;
+
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    User user = new User();
     User invalidUser = new User();
+    UserDto userDto = new UserDto();
+
+    List<User> users;
+    List<User> singlePageOfTen;
+    List<UserDto> usersDto;
+    List<UserDto> singlePageOfTenDto;
+
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         UserPk firstUserPk = new UserPk("abdennadher", "16/05/1991", "FRANCE");
-        firstUser.setUserPk(firstUserPk);
-        firstUser.setPhoneNumber("0676337561");
-        firstUser.setGender(Gender.M);
+        user.setUserPk(firstUserPk);
+        user.setPhoneNumber("0676337561");
+        user.setGender(Gender.M);
 
-        UserPk secondUserPk = new UserPk("abdennadher", "13/08/1996", "FRANCE");
-        secondUser.setUserPk(secondUserPk);
-        secondUser.setPhoneNumber("0616777531");
-        secondUser.setGender(Gender.M);
-
-        UserPk invalidUserPk = new UserPk("abdennadher", "13-08-1996", "FRANCE");
+        UserPk invalidUserPk = new UserPk("abdennadher", "16/05/2020", "USA");
         invalidUser.setUserPk(invalidUserPk);
 
-        UserDto userDto = new UserDto();
         userDto.setUserName("abdennadher");
         userDto.setBirthdate("16/05/1991");
         userDto.setCountry("FRANCE");
         userDto.setPhoneNumber("0676337561");
         userDto.setGender(Gender.M);
+
+        users = Arrays.asList(user,user,user,user,user,user,user,user,user,user,user,user);
+        singlePageOfTen = Arrays.asList(user,user,user,user,user,user,user,user,user,user);
+
+        userValidator = new UserValidator(userService);
+        userController = new UserController(userService, userMapper, userValidator);
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Test
-    public void getAllUserTestCase() {
-        when(userRepository.findAll()).thenReturn(Arrays.asList(firstUser, secondUser));
-        assertThat(userService.getAll().size()).isEqualTo(2);
+    public void getAllUserWithoutRequestParamShouldReturnAllUsers() throws Exception {
+        when(userService.getAll()).thenReturn(users);
+        // result without request param should return all users
+        MvcResult mvcResult = mockMvc.perform(get("/user"))
+                .andExpect(jsonPath("$.size()").value(12))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
-    public void getAllByUserNameTestCase() {
-        when(userRepository.findByUserPkUserName(any())).thenReturn(Arrays.asList(firstUser, secondUser));
-        assertThat(userService.getAllByUserName("abdennadher").size()).isEqualTo(2);
-    }
-
-
-    @Test
-    public void getUserByTestCase() {
-        // user exist
-        when(userRepository.findById(any())).thenReturn(Optional.of(firstUser));
-        assertThat(userService.getUserById("abdennadher","16/05/1991", "FRANCE").getUserPk()).isEqualTo(firstUser.getUserPk());
-
-        //user doesn't exist
-        when(userRepository.findById(any())).thenReturn(Optional.empty());
-        Assert.assertThrows(ResourceNotFoundException.class, ()-> userService.getUserById("jack","16/05/1991", "FRANCE"));
+    public void getAllUserWithRequestParamShouldReturnSinglePage() throws Exception {
+        when(userService.getAll(any())).thenReturn(singlePageOfTen);
+        // result with request param should return single page (10 element by default)
+        MvcResult mvcResultPaging = mockMvc.perform(get("/user?paging=true"))
+                .andExpect(jsonPath("$.size()").value(10))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
-    public void createUserTestCase() {
-        when(userRepository.save(firstUser)).thenReturn(firstUser);
-        assertThat(userService.create(firstUser)).isNotNull();
+    public void getUserByIdTestCase() throws Exception {
+        when(userService.getUserById(any(), any(), any())).thenReturn(user);
+
+        // expect userDto as a result when birthDate request param is given
+        MvcResult mvcResult = mockMvc.perform(get("/user/abdennadher?birthdate=16/05/1991"))
+                .andExpect(jsonPath("$.userName").value("abdennadher"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // expect badRequest exception as a result when birthDate request param is given
+        MvcResult mvcResultException = mockMvc.perform(get("/user/abdennadher"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
+                        .isEqualTo("Required request parameter 'birthdate' for method parameter type String is not present"))
+                .andReturn();
     }
 
     @Test
-    public void datePatternValidationTestCase() {
-        // valid pattern
-        assertThat(userService.isDatePatternValid(firstUser)).isTrue();
+    public void createUserShouldPass() throws Exception {
+        when(userService.create(user)).thenReturn(user);
+        when(userService.getUserByPk(any())).thenReturn(Optional.empty());
+        when(userService.isDatePatternValid(any())).thenReturn(true);
+        when(userService.getAge(any())).thenReturn(30);
 
-        // invalid pattern
-        assertThat(userService.isDatePatternValid(invalidUser)).isFalse();
+        MvcResult mvcResult = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isCreated())
+                .andReturn();
     }
 
     @Test
-    public void calculateAge() {
-        // The age must be 30 at 2021 and more from 2022 and above
-        assertThat(userService.getAge(firstUser)).isGreaterThanOrEqualTo(30);
+    public void createUserShouldFailWhenValidatorFail() throws Exception {
+        when(userService.create(invalidUser)).thenReturn(invalidUser);
+        when(userService.getUserByPk(any())).thenReturn(Optional.empty());
+        when(userService.isDatePatternValid(any())).thenReturn(false);
+        when(userService.getAge(any())).thenReturn(30);
+
+        MvcResult mvcResult = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isExpectationFailed())
+                .andReturn();
     }
+
 
 
 }

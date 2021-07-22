@@ -115,6 +115,6 @@ public class UserController {
                     .map(e -> " -"+e.getDefaultMessage()).collect(Collectors.joining("\n")), HttpStatus.EXPECTATION_FAILED);
         }
 
-        return new ResponseEntity(userMapper.toDto(userService.create(user)), HttpStatus.OK);
+        return new ResponseEntity(userMapper.toDto(userService.create(user)), HttpStatus.CREATED);
     }
 }

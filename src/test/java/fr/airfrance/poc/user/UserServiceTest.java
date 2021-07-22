@@ -1,5 +1,6 @@
-package fr.airfrance.poc;
+package fr.airfrance.poc.user;
 
+import fr.airfrance.poc.PocApplicationTests;
 import fr.airfrance.poc.dto.UserDto;
 import fr.airfrance.poc.entity.User;
 import fr.airfrance.poc.entity.UserPk;
